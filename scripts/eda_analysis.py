@@ -184,3 +184,53 @@ def analyze_new_competitors(data):
     plt.xlabel('Years Since Competitor Opened')
     plt.ylabel('Average Sales')
     plt.show()
+
+def analyze_competitor_effect(data):
+    # Filter stores that initially had no CompetitionDistance but later have values
+    competitors_changed = data[(data['CompetitionDistance'].isna()) & 
+                               (data['CompetitionOpenSinceYear'].notna())]
+
+    print(f"Total stores affected by new competitor opening: {competitors_changed['Store'].nunique()}")
+
+    # Fill missing CompetitionDistance with 0 for better handling
+    data['CompetitionDistance'] = data['CompetitionDistance'].fillna(0)
+
+    # Analyze average sales before and after competition opens
+    # Calculate the years after competition opened
+    data['CompetitorAge'] = data['Date'].dt.year - data['CompetitionOpenSinceYear']
+    data['CompetitorAge'] = data['CompetitorAge'].fillna(-1).clip(lower=-1) # -1 means no competitor
+    
+    # Plot sales against the age of competitors
+    plt.figure(figsize=(12, 6))
+    sns.lineplot(data=data, x='CompetitorAge', y='Sales', hue='StoreType')
+    plt.title('Average Sales vs Competitor Age (for stores with new competitors)')
+    plt.xlabel('Years since Competitor Opened')
+    plt.ylabel('Average Sales')
+    plt.show()
+
+    # Analyze the stores before and after competition opening (filtering for stores with competitor data)
+    competitor_opening_stores = data[data['CompetitionOpenSinceYear'].notna()]
+    
+    # Compare sales for stores with new competitors before and after the competitor opens
+    competitor_opening_stores['BeforeCompetitor'] = (data['Date'].dt.year < data['CompetitionOpenSinceYear'])
+    
+    plt.figure(figsize=(12, 6))
+    sns.boxplot(data=competitor_opening_stores, x='BeforeCompetitor', y='Sales')
+    plt.title('Sales Before vs After Competitor Opening')
+    plt.xticks([0, 1], ['After Competitor Opened', 'Before Competitor Opened'])
+    plt.xlabel('Competitor Presence')
+    plt.ylabel('Sales')
+    plt.show()
+
+    # Sales trend as competitor age grows
+    competitor_sales_trend = competitor_opening_stores.groupby('CompetitorAge')['Sales'].mean()
+    plt.figure(figsize=(12, 6))
+    competitor_sales_trend.plot(kind='line')
+    plt.title('Sales Trend as Competitor Gets Older')
+    plt.xlabel('Competitor Age (Years)')
+    plt.ylabel('Average Sales')
+    plt.show()
+
+    # Correlation between competition distance and sales after the competitor opened
+    correlation = data[data['CompetitionDistance'] > 0]['Sales'].corr(data['CompetitionDistance'])
+    print(f"Correlation between Competition Distance and Sales: {correlation:.2f}")
