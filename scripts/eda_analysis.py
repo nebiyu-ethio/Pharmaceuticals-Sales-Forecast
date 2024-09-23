@@ -234,3 +234,26 @@ def analyze_competitor_effect(data):
     # Correlation between competition distance and sales after the competitor opened
     correlation = data[data['CompetitionDistance'] > 0]['Sales'].corr(data['CompetitionDistance'])
     print(f"Correlation between Competition Distance and Sales: {correlation:.2f}")
+
+def analyze_store_hours(data):
+    # Group by DayOfWeek and calculate average sales
+    daily_sales = data.groupby('DayOfWeek')['Sales'].mean().reset_index()
+    
+    # Create a bar plot
+    plt.figure(figsize=(12, 6))
+    sns.barplot(x='DayOfWeek', y='Sales', data=daily_sales)
+    plt.title('Average Sales by Day of Week')
+    plt.xlabel('Day of Week')
+    plt.ylabel('Average Sales')
+    plt.xticks(range(7), ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
+    plt.show()
+
+    # Analyze open/closed patterns
+    open_stores = data.groupby('DayOfWeek')['Open'].mean()
+    print("Proportion of stores open by day of week:")
+    print(open_stores)
+
+    # Analyze sales for open stores
+    open_sales = data[data['Open'] == 1].groupby('DayOfWeek')['Sales'].mean()
+    print("\nAverage sales for open stores by day of week:")
+    print(open_sales)
