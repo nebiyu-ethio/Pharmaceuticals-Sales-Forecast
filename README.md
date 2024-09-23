@@ -10,13 +10,7 @@ The project involves building an end-to-end solution for predicting store sales 
 
 - [Business Need](#business-need)
 - [Data and Features](#data-and-features)
-- [Learning Outcomes](#learning-outcomes)
-- [Competency Mapping](#competency-mapping)
-- [Key Dates](#key-dates)
 - [Project Tasks](#project-tasks)
-- [How to Run](#how-to-run)
-- [Results](#results)
-- [Contributors](#contributors)
 
 ## Business Need
 
