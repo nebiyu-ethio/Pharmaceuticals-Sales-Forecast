@@ -3642,3 +3642,6 @@
 2024-09-27 17:49:49,892 INFO X shape: (910, 30), y shape: (910,)
 2024-09-27 17:49:49,892 INFO Supervised data created with n_step = 30
 2024-09-27 17:49:49,893 INFO X shape: (911, 30), y shape: (911,)
+2024-09-27 17:54:32,304 INFO LSTM model built with 30 steps
+2024-09-27 17:54:51,261 INFO Training LSTM model with epochs=50, batch_size=32, validation_split=0.2
+2024-09-27 17:55:09,892 INFO Model training complete
